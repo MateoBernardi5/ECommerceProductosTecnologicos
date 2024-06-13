@@ -20,6 +20,8 @@ builder.Configuration["ConnectionStrings:DBConnectionString"], b => b.Migrations
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ClientService>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
 #endregion
 
