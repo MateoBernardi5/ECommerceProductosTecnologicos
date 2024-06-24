@@ -22,6 +22,11 @@ namespace Application.Services
         {
             return _repository.Get(name);
         }
+
+        public void Add(Client client)
+        {
+            _repository.Add(client);
+        }
     }
     
 }

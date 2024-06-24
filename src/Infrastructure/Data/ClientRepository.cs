@@ -20,5 +20,11 @@ namespace Infrastructure.Data
         {
             return _context.Clients.FirstOrDefault(x => x.Name == name);
         }
+
+        public void Add(Client client)
+        {
+            _context.Clients.Add(client);
+            _context.SaveChanges();
+        }
     }
 }
