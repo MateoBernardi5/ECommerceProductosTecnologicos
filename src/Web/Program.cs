@@ -1,6 +1,7 @@
 using Application.Services;
 using Domain.Interfaces;
 using Infrastructure.Data;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,15 +15,38 @@ builder.Services.AddSwaggerGen();
 
 #region Services
 
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlite(
-builder.Configuration["ConnectionStrings:DBConnectionString"], b => b.MigrationsAssembly("Web")));
-
-
 builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ClientService>();
+
+#endregion
+
+//builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlite(
+//builder.Configuration["ConnectionStrings:DBConnectionString"], b => b.MigrationsAssembly("Web")));
+
+
+#region Repositories
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
+#endregion
+
+
+#region Database
+string connectionString = "Data Source=Ecommerce-ProductosTecnologicos.db";
+
+// Configure the SQLite connection
+var connection = new SqliteConnection(connectionString);
+connection.Open();
+
+// Set journal mode to DELETE using PRAGMA statement
+using (var command = connection.CreateCommand())
+{
+    command.CommandText = "PRAGMA journal_mode = DELETE;";
+    command.ExecuteNonQuery();
+}
+
+builder.Services.AddDbContext<ApplicationContext>(dbContextOptions => dbContextOptions.UseSqlite(connection));
 #endregion
 
 var app = builder.Build();

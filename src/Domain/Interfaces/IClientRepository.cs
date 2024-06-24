@@ -10,5 +10,6 @@ namespace Domain.Interfaces
     public interface IClientRepository
     {
         Client? Get(string name);
+        void Add(Client client);
     }
 }
