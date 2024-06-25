@@ -1,4 +1,4 @@
-﻿using Application.Models;
+﻿using Application.Models.Requests;
 using Application.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;

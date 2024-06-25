@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.Interfaces
 {
-    public class Admin : User
+    public interface IUserService
     {
-
     }
 }

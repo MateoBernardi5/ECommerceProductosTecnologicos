@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.Services
 {
-    public class Admin : User
+    public class ProductService
     {
 
     }
