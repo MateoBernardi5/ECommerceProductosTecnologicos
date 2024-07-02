@@ -20,5 +20,15 @@ namespace Application.Services
         {
             return _repository.Get(name);
         }
+
+        public User? Get(int id)
+        {
+            return _repository.Get(id);
+        }
+
+        public List<User> Get()
+        {
+            return _repository.Get();
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
 
+
 namespace Web.Controllers
 {
     [Route("api/[controller]")]
@@ -14,41 +15,21 @@ namespace Web.Controllers
     public class ClientController : ControllerBase
     {
         private readonly ClientService _service;
-
         public ClientController(ClientService service)
         {
             _service = service ;
         }
 
         [HttpGet("{name}")]
-        public IActionResult Get([FromRoute] string name)
+        public IActionResult GetByName([FromRoute] string name)
         {
             return Ok(_service.Get(name));
         }
 
         [HttpPost]
-        public IActionResult CreateClient([FromBody] CreateClientRequest request)
+        public IActionResult Add([FromBody] CreateClientRequest body)
         {
-            if (request == null)
-            {
-                return BadRequest("Invalid client data.");
-            }
-
-            var client = new Client
-            {
-                Name = request.Name,
-                LastName = request.LastName,
-                Email = request.Email,
-                UserName = request.UserName,
-                Password = request.Password,
-                UserType = request.UserType,
-                Address = request.Address, 
-            };
-            _service.Add(client);
-
-            return CreatedAtAction(nameof(Get), new { name = client.Name }, client);
+            return Ok(_service.AddClient(body));
         }
-
     }
 }
-
