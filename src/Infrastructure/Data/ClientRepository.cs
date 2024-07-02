@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
-    public class ClientRepository : IClientRepository
+    public class ClientRepository : BaseRepository<Client>, IClientRepository
     {
         private readonly ApplicationContext _context;
-        public ClientRepository(ApplicationContext context)
+        public ClientRepository(ApplicationContext context) : base(context)
         {
             _context = context;
         }
@@ -19,12 +19,6 @@ namespace Infrastructure.Data
         public Client? Get(string name)
         {
             return _context.Clients.FirstOrDefault(x => x.Name == name);
-        }
-
-        public void Add(Client client)
-        {
-            _context.Clients.Add(client);
-            _context.SaveChanges();
         }
     }
 }

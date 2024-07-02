@@ -15,10 +15,25 @@ namespace Web.Controllers
             _service = service;
         }
 
-        [HttpGet("{name}")]
-        public IActionResult Get([FromRoute] string name)
+        [HttpGet("name/{name}")]
+        public IActionResult GetByName([FromRoute] string name)
         {
-            return Ok(_service.Get(name));
+            var user = _service.Get(name);
+            return Ok(user);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById([FromRoute] int id)
+        {
+            var user = _service.Get(id);
+            return Ok(user);
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var users = _service.Get();
+            return Ok(users);
         }
     }
 }

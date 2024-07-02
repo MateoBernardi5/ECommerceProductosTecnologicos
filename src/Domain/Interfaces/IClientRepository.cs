@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IClientRepository
+    public interface IClientRepository : IBaseRepository<Client>
     {
         Client? Get(string name);
-        void Add(Client client);
     }
 }
