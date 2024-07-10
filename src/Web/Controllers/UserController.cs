@@ -28,12 +28,5 @@ namespace Web.Controllers
             var user = _service.Get(id);
             return Ok(user);
         }
-
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var users = _service.Get();
-            return Ok(users);
-        }
     }
 }

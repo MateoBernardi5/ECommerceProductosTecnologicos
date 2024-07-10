@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
-    public class ClientRepository : BaseRepository<Client>, IClientRepository
+    public class AdminRepository : BaseRepository<Admin>, IAdminRepository
     {
         private readonly ApplicationContext _context;
-        public ClientRepository(ApplicationContext context) : base(context)
+        public AdminRepository(ApplicationContext context) : base(context)
         {
             _context = context;
         }
 
-        public Client? Get(string name)
+        public Admin? Get(string name)
         {
-            return _context.Clients.FirstOrDefault(x => x.Name == name);
+            return _context.Admins.FirstOrDefault(x => x.Name == name);
         }
 
-        public List<Client> GetClients()
+        public List<Admin> GetAdmins()
         {
-            return _context.Set<Client>().ToList();
+            return _context.Set<Admin>().ToList();
         }
     }
 }

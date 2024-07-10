@@ -25,10 +25,13 @@ namespace Application.Services
         {
             return _repository.Get(id);
         }
-
-        public List<User> Get()
+        public void DeleteUser(int id)
         {
-            return _repository.Get();
+            var userToDelete = _repository.Get(id);
+            if (userToDelete != null)
+            {
+                _repository.Delete(userToDelete);
+            }
         }
     }
 }

@@ -22,8 +22,12 @@ namespace Application.Services
         {
             return _repository.Get(name);
         }
+        public List<Client> GetClients()
+        {
+            return _repository.Get().ToList();
+        }
 
-        public int AddClient(CreateClientRequest request)
+        public int AddClient(ClientCreateRequest request)
         {
             var client = new Client()
             {
@@ -32,7 +36,7 @@ namespace Application.Services
                 Email = request.Email,
                 UserName = request.UserName,
                 Password = request.Password,
-                UserType = request.UserType,
+                UserType = "Client",
                 Address = request.Address,
             };
             return _repository.Add(client).Id;

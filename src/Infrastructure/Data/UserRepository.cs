@@ -20,5 +20,12 @@ namespace Infrastructure.Data
         {
             return _context.Users.FirstOrDefault(x => x.Name == name);
         }
+
+        public void Delete(User user)
+        {
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+        }
+
     }
 }

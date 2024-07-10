@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.Models.Requests
 {
-    public class ClientCreateRequest
-    {
+    public class AdminCreateRequest
+    {   
         [Required]
         public string Name { get; set; }
         [Required]
@@ -19,7 +19,6 @@ namespace Application.Models.Requests
         public string UserName { get; set; }
         [Required]
         public string Password { get; set; }
-        [Required]
-        public string Address { get; set; }
     }
 }
+
