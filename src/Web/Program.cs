@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<ProductService>();
 
 #endregion
 
@@ -30,7 +31,7 @@ builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 #endregion
 
 
