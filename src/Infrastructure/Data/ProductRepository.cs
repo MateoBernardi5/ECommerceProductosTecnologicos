@@ -22,20 +22,5 @@ namespace Infrastructure.Data
         {
             return _context.Products.FirstOrDefault(p => p.Name == name);
         }
-
-        public void Delete(Product product)
-        {
-            _context.Products.Remove(product);
-            _context.SaveChanges();
-        }
-
-        public Product UpdateProduct(Product product)
-        {
-            _context.Update(product);
-            _context.SaveChanges();
-            return product;
-        }
-
-
     }
 }

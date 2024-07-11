@@ -12,7 +12,7 @@ using System.Security.Claims;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ClientController : ControllerBase
     {
@@ -24,16 +24,32 @@ namespace Web.Controllers
             _userService = userService;
         }
 
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(_service.GetAllClients());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById([FromRoute] int id)
+        {
+            var client = _service.Get(id);
+            if (client == null)
+            {
+                return NotFound($"No se encontró ningún cliente con el ID: {id}");
+            }
+            return Ok(client);
+        }
+
         [HttpGet("{name}")]
         public IActionResult GetByName([FromRoute] string name)
         {
-            return Ok(_service.Get(name));
-        }
-
-        [HttpGet]
-        public IActionResult GetClients()
-        {
-            return Ok(_service.GetClients());
+            var client = _service.Get(name);
+            if (client == null)
+            {
+                return NotFound($"No se encontró ningún cliente con el nombre: {name}");
+            }
+            return Ok(client);
         }
 
         [HttpPost]
@@ -42,12 +58,12 @@ namespace Web.Controllers
             return Ok(_service.AddClient(body));
         }
 
-        [HttpDelete("DeleteClient/{id}")]
-        public IActionResult DeleteClient(int id)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteClient([FromRoute] int id)
         {
             try
             {
-                var existingClient = _userService.Get(id);
+                var existingClient = _service.Get(id);
                 if (existingClient == null)
                 {
                     return NotFound($"No se encontró ningún Cliente con el ID: {id}");
@@ -61,6 +77,5 @@ namespace Web.Controllers
                 return BadRequest($"Se produjo un error al intentar eliminar el cliente: {ex.Message}");
             }
         }
-
     }
 }

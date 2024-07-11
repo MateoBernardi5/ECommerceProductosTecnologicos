@@ -11,5 +11,7 @@ namespace Domain.Interfaces
         T? Get<TId>(TId id);
         List<T> Get();
         T Add(T entity);
+        void Delete(T entity);
+        T Update(T entity);
     }
 }

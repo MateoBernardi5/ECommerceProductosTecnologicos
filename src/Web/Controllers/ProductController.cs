@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -19,18 +19,33 @@ namespace Web.Controllers
             _productService = productService;
         }
 
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var products = _productService.GetAllProducts();
+            return Ok(products);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
             var product = _productService.Get(id);
+            if (product == null)
+            {
+                return NotFound($"No se encontró ningún Producto con el ID: {id}");
+            }
             return Ok(product);
         }
 
-        
-        [HttpGet("name/{name}")]
+
+        [HttpGet("{name}")]
         public IActionResult GetByName([FromRoute] string name)
         {
             var product = _productService.Get(name);
+            if (product == null)
+            {
+                return NotFound($"No se encontró ningún Producto con el nombre: {name}");
+            }
             return Ok(product);
         }
 
@@ -60,9 +75,6 @@ namespace Web.Controllers
                 return BadRequest($"Se produjo un error al intentar eliminar el producto: {ex.Message}");
             }
         }
-
-
-
     }
 }
 

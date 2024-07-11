@@ -17,14 +17,19 @@ namespace Application.Services
             _repository = repository;
         }
 
+        public List<Admin> GetAllAdmins()
+        {
+            return _repository.Get();
+        }
+
+        public Admin? Get(int id)
+        {
+            return _repository.Get(id);
+        }
+
         public Admin? Get(string name)
         {
             return _repository.Get(name);
-        }
-
-        public List<Admin> GetAdmins()
-        {
-            return _repository.Get().ToList();
         }
 
         public int AddAdmin(AdminCreateRequest request)
@@ -40,7 +45,14 @@ namespace Application.Services
             };
             return _repository.Add(admin).Id;
         }
+
+        public void DeleteAdmin(int id)
+        {
+            var adminToDelete = _repository.Get(id);
+            if (adminToDelete != null )
+            {
+                _repository.Delete(adminToDelete);
+            }
+        }
     }
-
 }
-

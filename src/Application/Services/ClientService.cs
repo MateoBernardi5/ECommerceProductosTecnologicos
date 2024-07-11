@@ -18,13 +18,19 @@ namespace Application.Services
             _repository = repository;   
         }
 
+        public List<Client> GetAllClients()
+        {
+            return _repository.Get();
+        }
+
+        public Client? Get(int id)
+        {
+            return _repository.Get(id);
+        }
+
         public Client? Get(string name)
         {
             return _repository.Get(name);
-        }
-        public List<Client> GetClients()
-        {
-            return _repository.Get().ToList();
         }
 
         public int AddClient(ClientCreateRequest request)
@@ -40,6 +46,15 @@ namespace Application.Services
                 Address = request.Address,
             };
             return _repository.Add(client).Id;
+        }
+
+        public void DeleteClient(int id)
+        {
+            var clientToDelete = _repository.Get(id);
+            if (clientToDelete != null)
+            {
+                _repository.Delete(clientToDelete);
+            }
         }
     }
 }
