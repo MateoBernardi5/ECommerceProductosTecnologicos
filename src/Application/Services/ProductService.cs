@@ -18,8 +18,11 @@ namespace Application.Services
         {
             _repository = repository;
         }
+        public List<Product> GetAllProducts()
+        {
+            return _repository.Get();
+        }
 
-       
         public Product? Get(string name)
         {
             return _repository.Get(name);
@@ -50,20 +53,6 @@ namespace Application.Services
                 _repository.Delete(productToDelete);
             }
         }
-
-        //public Product UpdateProduct(ProductUpdateRequest request)
-        //{
-        //    var product = _repository.Get(request.Id);
-        //    if (product != null)
-        //    {
-                
-        //        product.Price = request.Price;
-        //        product.Stock = request.Stock;
-
-        //        _repository.Update(product);
-        //    }
-        //    return product;
-        //}
     }
 }
 

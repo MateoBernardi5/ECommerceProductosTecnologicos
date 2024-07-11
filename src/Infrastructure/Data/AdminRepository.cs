@@ -20,10 +20,5 @@ namespace Infrastructure.Data
         {
             return _context.Admins.FirstOrDefault(x => x.Name == name);
         }
-
-        public List<Admin> GetAdmins()
-        {
-            return _context.Set<Admin>().ToList();
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Models.Requests;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,10 @@ namespace Application.Interfaces
 {
     public interface IProductService
     {
-        
-
+        List<Product> GetAllProducts();
+        Product? Get(string name);
+        Product? Get(int id);
+        int AddProduct(ProductCreateRequest request);
+        void DeleteProduct(int id);
     }
 }

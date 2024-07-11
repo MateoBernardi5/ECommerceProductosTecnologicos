@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AdminController : ControllerBase
     {
@@ -18,16 +18,32 @@ namespace Web.Controllers
             _userService = userService;
         }
 
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(_service.GetAllAdmins());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById([FromRoute] int id)
+        {
+            var admin = _service.Get(id);
+            if (admin == null)
+            {
+                return NotFound($"No se encontró ningún admin con el ID: {id}");
+            }
+            return Ok(admin);
+        }
+
         [HttpGet("{name}")]
         public IActionResult GetByName([FromRoute] string name)
         {
-            return Ok(_service.Get(name));
-        }
-
-        [HttpGet]
-        public IActionResult GetAdmins()
-        {
-            return Ok(_service.GetAdmins());
+            var admin = _service.Get(name);
+            if (admin == null)
+            {
+                return NotFound($"No se encontró ningún admin con el nombre: {name}");
+            }
+            return Ok(admin);
         }
 
         [HttpPost]
@@ -36,12 +52,12 @@ namespace Web.Controllers
             return Ok(_service.AddAdmin(body));
         }
 
-        [HttpDelete("DeleteAdmin/{id}")]
+        [HttpDelete("{id}")]
         public IActionResult DeleteAdmin(int id)
         {
             try
             {
-                var existingAdmin = _userService.Get(id);
+                var existingAdmin = _service.Get(id);
                 if (existingAdmin == null)
                 {
                     return NotFound($"No se encontró ningún Admin con el ID: {id}");

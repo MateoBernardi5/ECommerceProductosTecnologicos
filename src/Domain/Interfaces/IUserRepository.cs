@@ -10,6 +10,5 @@ namespace Domain.Interfaces
     public interface IUserRepository : IBaseRepository<User>
     {
         User? Get(string name);
-        void Delete(User user);
     }
 }

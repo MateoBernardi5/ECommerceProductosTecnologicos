@@ -9,11 +9,6 @@ namespace Domain.Interfaces
 {
     public interface IProductRepository : IBaseRepository<Product>
     {
-
         Product? Get(string name);
-
-        void Delete(Product product);
-
-        
     }
 }

@@ -20,10 +20,5 @@ namespace Infrastructure.Data
         {
             return _context.Clients.FirstOrDefault(x => x.Name == name);
         }
-
-        public List<Client> GetClients()
-        {
-            return _context.Set<Client>().ToList();
-        }
     }
 }

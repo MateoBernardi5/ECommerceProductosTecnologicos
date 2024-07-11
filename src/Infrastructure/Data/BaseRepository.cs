@@ -32,5 +32,18 @@ namespace Infrastructure.Data
             _context.SaveChanges();
             return entity;
         }
+
+        public void Delete(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public T Update(T entity)
+        {
+            _context.Set<T>().Update(entity);
+            _context.SaveChanges();
+            return entity;
+        }
     }
 }
