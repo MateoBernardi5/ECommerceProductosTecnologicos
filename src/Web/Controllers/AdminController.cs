@@ -10,9 +10,9 @@ namespace Web.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private readonly AdminService _service;
-        private readonly UserService _userService;
-        public AdminController(AdminService service, UserService userService)
+        private readonly IAdminService _service;
+        private readonly IUserService _userService;
+        public AdminController(IAdminService service, IUserService userService)
         {
             _service = service;
             _userService = userService;

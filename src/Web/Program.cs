@@ -1,3 +1,4 @@
+using Application.Interfaces;
 using Application.Services;
 using Domain.Interfaces;
 using Infrastructure.Data;
@@ -15,15 +16,13 @@ builder.Services.AddSwaggerGen();
 
 #region Services
 
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<ClientService>();
-builder.Services.AddScoped<AdminService>();
-builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped< IAdminService, AdminService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ISaleOrderService, SaleOrderService>();
 
 #endregion
-
-//builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlite(
-//builder.Configuration["ConnectionStrings:DBConnectionString"], b => b.MigrationsAssembly("Web")));
 
 
 #region Repositories
@@ -32,6 +31,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ISaleOrderRepository, SaleOrderRepository>();
+
 #endregion
 
 

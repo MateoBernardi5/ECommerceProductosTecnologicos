@@ -8,5 +8,6 @@ namespace Application.Models
 {
     public class SaleOrderDto
     {
+        public int ClientId { get; set; }
     }
 }
