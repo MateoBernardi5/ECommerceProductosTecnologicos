@@ -1,4 +1,5 @@
-﻿using Application.Models.Requests;
+﻿using Application.Interfaces;
+using Application.Models.Requests;
 using Domain.Entities;
 using Domain.Interfaces;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class AdminService
+    public class AdminService : IAdminService
     {
         private readonly IAdminRepository _repository;
         public AdminService(IAdminRepository repository)

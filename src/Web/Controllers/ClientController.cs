@@ -16,9 +16,9 @@ namespace Web.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-        private readonly ClientService _service;
-        private readonly UserService _userService;
-        public ClientController(ClientService service, UserService userService)
+        private readonly IClientService _service;
+        private readonly IUserService _userService;
+        public ClientController(IClientService service, IUserService userService)
         {
             _service = service;
             _userService = userService;

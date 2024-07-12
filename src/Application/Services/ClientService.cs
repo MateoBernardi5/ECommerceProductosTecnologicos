@@ -1,4 +1,5 @@
-﻿using Application.Models.Requests;
+﻿using Application.Interfaces;
+using Application.Models.Requests;
 using Domain.Entities;
 using Domain.Interfaces;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class ClientService 
+    public class ClientService : IClientService
     {
         private readonly IClientRepository _repository;
         public ClientService(IClientRepository repository)

@@ -1,11 +1,69 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Interfaces;
+using Application.Models;
+using Application.Models.Requests;
+using Application.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class SaleOrderController : ControllerBase
     {
+        private readonly ISaleOrderService _saleOrderService;
+
+        public SaleOrderController(ISaleOrderService saleOrderService)
+        {
+            _saleOrderService = saleOrderService;
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var saleOrders = _saleOrderService.GetAllSaleOrders();
+            return Ok(saleOrders);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById([FromRoute] int id)
+        {
+            var saleOrder = _saleOrderService.Get(id);
+            if (saleOrder == null)
+            {
+                return NotFound($"No se encontró ninguna venta con el ID: {id}");
+            }
+            return Ok(saleOrder);
+        }
+
+
+        [HttpPost]
+        public IActionResult Add([FromBody] SaleOrderDto dto)
+        {
+            return Ok(_saleOrderService.AddSaleOrder(dto));
+        }
+
+        //update
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteSaleOrder([FromRoute] int id)
+        {
+            try
+            {
+                var existingSaleOrder = _saleOrderService.Get(id);
+                if (existingSaleOrder == null)
+                {
+                    return NotFound($"No se encontró ninguna venta con el ID: {id}");
+                }
+
+                _saleOrderService.DeleteSaleOrder(id);
+                return Ok($"Venta con ID: {id} eliminada");
+            }
+
+            catch (Exception ex)
+            {
+                return BadRequest($"Se produjo un error al intentar eliminar la venta: {ex.Message}");
+            }
+        }
     }
 }

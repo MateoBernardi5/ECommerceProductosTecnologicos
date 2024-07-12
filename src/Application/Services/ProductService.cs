@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class ProductService 
+    public class ProductService : IProductService
     {
         private readonly IProductRepository _repository;
 
