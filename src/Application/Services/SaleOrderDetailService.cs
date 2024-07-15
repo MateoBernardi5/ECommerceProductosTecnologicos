@@ -19,6 +19,11 @@ namespace Application.Services
             _repository = repository;
         }
 
+        public List<SaleOrderDetail> GetAllSaleOrderDetails()
+        {
+            return _repository.Get();
+        }
+
         public List<SaleOrderDetail> GetAllByProduct(int productId)
         {
             return _repository.GetAllByProduct(productId);
@@ -74,6 +79,19 @@ namespace Application.Services
             if (saleOrderDetailToDelete != null)
             {
                 _repository.Delete(saleOrderDetailToDelete);
+            }
+        }
+
+        public void UpdateSaleOrderDetail(int id, SaleOrderDetailUpdateRequest request)
+        {
+            var saleOrderDetailToUpdate = _repository.Get(id);
+            if (saleOrderDetailToUpdate != null)
+            {
+               saleOrderDetailToUpdate.Amount = request.Amount;
+               saleOrderDetailToUpdate.ProductId = request.ProductId;
+
+
+                _repository.Update(saleOrderDetailToUpdate);
             }
         }
     }

@@ -15,5 +15,6 @@ namespace Application.Interfaces
         Client? Get(string name);
         int AddClient(ClientCreateRequest request);
         void DeleteClient(int id);
+        void UpdateClient(int id, ClientUpdateRequest request);
     }
 }

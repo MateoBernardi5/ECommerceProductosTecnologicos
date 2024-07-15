@@ -53,6 +53,19 @@ namespace Application.Services
                 _repository.Delete(productToDelete);
             }
         }
+
+        public void UpdateProduct(int id, ProductUpdateRequest request)
+        {
+            var productToUpdate = _repository.Get(id);
+            if (productToUpdate != null)
+            {
+                productToUpdate.Price = request.Price;
+                productToUpdate.Stock = request.Stock;
+                
+
+                _repository.Update(productToUpdate);
+            }
+        }
     }
 }
 

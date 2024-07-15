@@ -1,4 +1,5 @@
-﻿//using Application.Services;
+﻿//using Application.Interfaces;
+//using Application.Services;
 //using Domain.Entities;
 //using Microsoft.AspNetCore.Http;
 //using Microsoft.AspNetCore.Mvc;
@@ -28,5 +29,22 @@
 //            var user = _service.Get(id);
 //            return Ok(user);
 //        }
+
+//        [HttpDelete("{id}")]
+//        public IActionResult DeleteUser([FromRoute] int id)
+//        {
+//            var existingClient = _service.Get(id);
+//            if (existingClient == null)
+//            {
+//                return NotFound($"No se encontró ningún Cliente con el ID: {id}");
+//            }
+//            _service.DeleteUser(id);
+//            return Ok($"Cliente con ID: {id} eliminado");
+//        }
+
+        
 //    }
 //}
+
+    
+
