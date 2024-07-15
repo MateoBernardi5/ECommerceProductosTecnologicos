@@ -9,5 +9,6 @@ namespace Domain.Entities
     public class Client : User
     {
         public required string Address { get; set; }
+        public ICollection<SaleOrder> SaleOrders { get; set; } = new List<SaleOrder>();
     }
 }

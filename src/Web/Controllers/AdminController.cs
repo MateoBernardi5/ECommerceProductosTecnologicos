@@ -55,21 +55,28 @@ namespace Web.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteAdmin(int id)
         {
-            try
+            var existingAdmin = _service.Get(id);
+            if (existingAdmin == null)
             {
-                var existingAdmin = _service.Get(id);
-                if (existingAdmin == null)
-                {
-                    return NotFound($"No se encontró ningún Admin con el ID: {id}");
-                }
+                return NotFound($"No se encontró ningún Admin con el ID: {id}");
+            }
+            _service.DeleteAdmin(id);
+            return Ok($"Admin con ID: {id} eliminado");
+        }
 
-                _userService.DeleteUser(id);
-                return Ok($"Admin con ID: {id} eliminado");
-            }
-            catch (Exception ex)
+        [HttpPut("{id}")]
+        public IActionResult UpdateAdmin([FromRoute] int id, [FromBody] AdminUpdateRequest request)
+        {
+            // Verificar si existe el Admin con el ID proporcionado
+            var existingAdmin = _service.Get(id);
+            if (existingAdmin == null)
             {
-                return BadRequest($"Se produjo un error al intentar eliminar el admin: {ex.Message}");
+                return NotFound($"No se encontró ningún Admin con el ID: {id}");
             }
+
+            // Actualizar el Admin
+            _service.UpdateAdmin(id, request);
+            return Ok($"Admin con ID: {id} actualizado correctamente");
         }
     }
 }

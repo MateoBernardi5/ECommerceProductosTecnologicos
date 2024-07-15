@@ -21,6 +21,7 @@ builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped< IAdminService, AdminService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISaleOrderService, SaleOrderService>();
+builder.Services.AddScoped<ISaleOrderDetailService, SaleOrderDetailService>();
 
 #endregion
 
@@ -32,6 +33,7 @@ builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISaleOrderRepository, SaleOrderRepository>();
+builder.Services.AddScoped<ISaleOrderDetailRepository, SaleOrderDetailRepository>();
 
 #endregion
 
