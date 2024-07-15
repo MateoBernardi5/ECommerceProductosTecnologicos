@@ -3,16 +3,19 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Web.Migrations
+namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240713141742_SaleOrderDetailMigration")]
+    partial class SaleOrderDetailMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
@@ -81,7 +84,7 @@ namespace Web.Migrations
 
                     b.HasIndex("SaleOrderId");
 
-                    b.ToTable("SaleOrderDetails");
+                    b.ToTable("SaleOrdersDetails");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -145,7 +148,7 @@ namespace Web.Migrations
             modelBuilder.Entity("Domain.Entities.SaleOrder", b =>
                 {
                     b.HasOne("Domain.Entities.Client", "Client")
-                        .WithMany("SaleOrders")
+                        .WithMany()
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -175,11 +178,6 @@ namespace Web.Migrations
             modelBuilder.Entity("Domain.Entities.SaleOrder", b =>
                 {
                     b.Navigation("SaleOrderDetails");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Client", b =>
-                {
-                    b.Navigation("SaleOrders");
                 });
 #pragma warning restore 612, 618
         }

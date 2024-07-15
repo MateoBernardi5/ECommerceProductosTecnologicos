@@ -15,5 +15,6 @@ namespace Application.Interfaces
         Admin? Get(string name);
         int AddAdmin(AdminCreateRequest request);
         void DeleteAdmin(int id);
+        void UpdateAdmin(int id, AdminUpdateRequest request);
     }
 }

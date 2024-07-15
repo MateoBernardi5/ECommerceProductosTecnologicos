@@ -50,9 +50,22 @@ namespace Application.Services
         public void DeleteAdmin(int id)
         {
             var adminToDelete = _repository.Get(id);
-            if (adminToDelete != null )
+            if (adminToDelete != null)
             {
                 _repository.Delete(adminToDelete);
+            }
+        }
+
+        public void UpdateAdmin(int id, AdminUpdateRequest request)
+        {
+            var adminToUpdate = _repository.Get(id);
+            if (adminToUpdate != null)
+            {
+                adminToUpdate.Email = request.Email;
+                adminToUpdate.UserName = request.UserName;
+                adminToUpdate.Password = request.Password;
+
+                _repository.Update(adminToUpdate);
             }
         }
     }
