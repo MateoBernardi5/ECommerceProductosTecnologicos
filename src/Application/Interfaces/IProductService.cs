@@ -15,5 +15,6 @@ namespace Application.Interfaces
         Product? Get(int id);
         int AddProduct(ProductCreateRequest request);
         void DeleteProduct(int id);
+        void UpdateProduct(int id, ProductUpdateRequest request);
     }
 }

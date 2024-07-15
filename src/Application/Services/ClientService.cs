@@ -57,5 +57,19 @@ namespace Application.Services
                 _repository.Delete(clientToDelete);
             }
         }
+
+        public void UpdateClient(int id, ClientUpdateRequest request)
+        {
+            var clientToUpdate = _repository.Get(id);
+            if (clientToUpdate != null)
+            {
+                clientToUpdate.Email = request.Email;
+                clientToUpdate.UserName = request.UserName;
+                clientToUpdate.Password = request.Password;
+                clientToUpdate.Address = request.Address;
+             
+                _repository.Update(clientToUpdate);
+            }
+        }
     }
 }

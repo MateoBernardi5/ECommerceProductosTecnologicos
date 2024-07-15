@@ -61,21 +61,28 @@ namespace Web.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteClient([FromRoute] int id)
         {
-            try
+            var existingClient = _service.Get(id);
+            if (existingClient == null)
             {
-                var existingClient = _service.Get(id);
-                if (existingClient == null)
-                {
-                    return NotFound($"No se encontró ningún Cliente con el ID: {id}");
-                }
+                return NotFound($"No se encontró ningún Cliente con el ID: {id}");
+            }
+            _userService.DeleteUser(id);
+            return Ok($"Cliente con ID: {id} eliminado");                
+        }
 
-                _userService.DeleteUser(id);
-                return Ok($"Cliente con ID: {id} eliminado");
-            }
-            catch (Exception ex)
+        [HttpPut("{id}")]
+        public IActionResult UpdateClient([FromRoute] int id, [FromBody] ClientUpdateRequest request)
+        {
+            // Verificar si existe el Admin con el ID proporcionado
+            var existingClient = _service.Get(id);
+            if (existingClient == null)
             {
-                return BadRequest($"Se produjo un error al intentar eliminar el cliente: {ex.Message}");
+                return NotFound($"No se encontró ningún Cliente con el ID: {id}");
             }
+
+            // Actualizar el Admin
+            _service.UpdateClient(id, request);
+            return Ok($"Cliente con ID: {id} actualizado correctamente");
         }
     }
 }

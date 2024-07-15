@@ -38,14 +38,23 @@ namespace Application.Services
             return _repository.Add(saleOrder).Id;
         }
 
-        //update
-    
+       
         public void DeleteSaleOrder(int id)
         {
             var saleOrderToDelete = _repository.Get(id);
             if (saleOrderToDelete != null)
             {
                 _repository.Delete(saleOrderToDelete);
+            }
+        }
+
+        public void UpdateSaleOrder(int id, SaleOrderDto dto)
+        {
+            var saleOrderToUpdate = _repository.Get(id);
+            if (saleOrderToUpdate != null)
+            {
+                saleOrderToUpdate.ClientId = dto.ClientId;
+                _repository.Update(saleOrderToUpdate);
             }
         }
     }

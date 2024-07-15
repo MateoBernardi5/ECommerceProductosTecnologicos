@@ -14,5 +14,6 @@ namespace Application.Interfaces
         SaleOrder? Get(int id);
         int AddSaleOrder(SaleOrderDto dto);
         void DeleteSaleOrder(int id);
+        void UpdateSaleOrder(int id, SaleOrderDto dto);
     }
 }

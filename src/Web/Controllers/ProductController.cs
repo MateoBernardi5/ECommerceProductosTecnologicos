@@ -75,6 +75,22 @@ namespace Web.Controllers
                 return BadRequest($"Se produjo un error al intentar eliminar el producto: {ex.Message}");
             }
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateProduct([FromRoute] int id, [FromBody] ProductUpdateRequest request)
+        {
+            // Verificar si existe el Admin con el ID proporcionado
+            var existingProduct = _productService.Get(id);
+            if (existingProduct == null)
+            {
+                return NotFound($"No se encontró ningún Producto con el ID: {id}");
+            }
+
+            // Actualizar el Admin
+            _productService.UpdateProduct(id, request);
+            return Ok($"Producto con ID: {id} actualizado correctamente");
+        }
+        
     }
 }
 

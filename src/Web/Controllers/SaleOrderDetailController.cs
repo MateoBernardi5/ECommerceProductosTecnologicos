@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
+using Application.Models.Requests;
+using Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +16,13 @@ namespace Web.Controllers
         public SaleOrderDetailController(ISaleOrderDetailService saleOrderDetailService)
         {
             _saleOrderDetailService = saleOrderDetailService;
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var saleOrderDetails = _saleOrderDetailService.GetAllSaleOrderDetails();
+            return Ok(saleOrderDetails);
         }
 
         [HttpGet("{id}")]
@@ -55,7 +64,7 @@ namespace Web.Controllers
             return Ok(_saleOrderDetailService.AddSaleOrderDetail(dto));
         }
 
-        //update
+        
 
         [HttpDelete("{id}")]
         public IActionResult DeleteSaleOrderDetail([FromRoute] int id)
@@ -76,6 +85,21 @@ namespace Web.Controllers
             {
                 return BadRequest($"Se produjo un error al intentar eliminar el detalle de venta: {ex.Message}");
             }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateSaleOrderDetail([FromRoute] int id, [FromBody] SaleOrderDetailUpdateRequest request)
+        {
+            // Verificar si existe el Admin con el ID proporcionado
+            var existingSaleOrderDetail = _saleOrderDetailService.Get(id);
+            if (existingSaleOrderDetail == null)
+            {
+                return NotFound($"No se encontró ningun Detalle de Venta con el ID: {id}");
+            }
+
+            // Actualizar el Admin
+            _saleOrderDetailService.UpdateSaleOrderDetail(id, request);
+            return Ok($"Detalle de Venta con ID: {id} actualizado correctamente");
         }
     }
 }
