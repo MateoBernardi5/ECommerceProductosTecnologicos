@@ -1,5 +1,4 @@
 ﻿using Application.Models.Requests;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-    public interface IUserService
+    public interface ICustomAuthenticationService
     {
-        User? Get(string name);
-        User? Get(int id);
-        void DeleteUser(int id);
+        string Authenticate(CredentialsDtoRequest credentials);
     }
 }
