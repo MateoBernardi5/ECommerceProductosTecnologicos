@@ -14,6 +14,7 @@ namespace Web.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class ClientController : ControllerBase
     {
         private readonly IClientService _service;

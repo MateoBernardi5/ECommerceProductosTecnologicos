@@ -28,6 +28,18 @@ namespace Infrastructure.Data
                 .HasValue<Client>("Client")
                 .HasValue<Admin>("Admin");
 
+            modelBuilder.Entity<Admin>().HasData(
+                new Admin
+                {
+                    LastName = "Bernardi",
+                    Name = "Mateo",
+                    Email = "mateobernardi@gmail.com",
+                    UserName = "mateo",
+                    Password = "123",
+                    Id = 5,
+                    UserType = "Admin"
+                });
+
             // Relación entre Cliente y OrdenDeVenta (uno a muchos)
             modelBuilder.Entity<Client>()
            .HasMany(c => c.SaleOrders)

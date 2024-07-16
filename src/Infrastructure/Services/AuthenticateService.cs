@@ -11,12 +11,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using Domain.Exceptions;
-
-
+using Application.Interfaces;
 
 namespace Infrastructure.Services
 {
-    public class AuthenticateService
+    public class AuthenticateService : ICustomAuthenticationService
     {
         private readonly IUserRepository _userRepository;
         private readonly AuthenticateServiceOptions _options;
@@ -27,6 +26,23 @@ namespace Infrastructure.Services
             _options = options.Value;
         }
 
+        //private User? ValidateUser(CredentialsDtoRequest credentialsRequest)
+        //{
+        //    if (string.IsNullOrEmpty(credentialsRequest.Email) || string.IsNullOrEmpty(credentialsRequest.Password))
+        //        return null;
+
+        //    var user = _userRepository.Get(credentialsRequest.Email);
+
+        //    if (user == null) return null;
+
+        //    if (credentialsRequest.UserType == typeof(Admin).Name || credentialsRequest.UserType == typeof(Client).Name)
+        //    {
+        //        if (user.UserType == credentialsRequest.UserType && user.Password == credentialsRequest.Password) return user;
+        //    }
+
+        //    return null;
+
+        //}
         private User? ValidateUser(CredentialsDtoRequest credentialsRequest)
         {
             if (string.IsNullOrEmpty(credentialsRequest.Email) || string.IsNullOrEmpty(credentialsRequest.Password))
@@ -36,15 +52,11 @@ namespace Infrastructure.Services
 
             if (user == null) return null;
 
-            if (credentialsRequest.UserType == typeof(Admin).Name || credentialsRequest.UserType == typeof(Client).Name)
-            {
-                if (user.UserType == credentialsRequest.UserType && user.Password == credentialsRequest.Password) return user;
-            }
+            // Verificamos solo email y password
+            if (user.Password == credentialsRequest.Password) return user;
 
             return null;
-
         }
-
 
         public string Authenticate(CredentialsDtoRequest credentialsRequest)
         {
@@ -67,7 +79,8 @@ namespace Infrastructure.Services
             claimsForToken.Add(new Claim("sub", user.Id.ToString())); //"sub" es una key estándar que significa unique user identifier, es decir, si mandamos el id del usuario por convención lo hacemos con la key "sub".
             claimsForToken.Add(new Claim("given_name", user.Name)); //Lo mismo para given_name y family_name, son las convenciones para nombre y apellido. Ustedes pueden usar lo que quieran, pero si alguien que no conoce la app
             claimsForToken.Add(new Claim("family_name", user.LastName)); //quiere usar la API por lo general lo que espera es que se estén usando estas keys.
-            claimsForToken.Add(new Claim("role", credentialsRequest.UserType)); //Debería venir del usuario
+            claimsForToken.Add(new Claim("role", user.UserType)); //Debería venir del usuario
+            //claimsForToken.Add(new Claim("role", credentialsRequest.UserType)); //Debería venir del usuario
 
             var jwtSecurityToken = new JwtSecurityToken( //agregar using System.IdentityModel.Tokens.Jwt; Acá es donde se crea el token con toda la data que le pasamos antes.
               _options.Issuer,
@@ -84,7 +97,6 @@ namespace Infrastructure.Services
 
         }
             
-      
         public class AuthenticateServiceOptions
         {
             public const string AuthenticateService = "AuthenticateService";
