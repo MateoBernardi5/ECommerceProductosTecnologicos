@@ -29,7 +29,7 @@ namespace Web.Controllers
         }
 
         [HttpGet("by-price")]
-        public ActionResult<List<Product>> GetProductsWithMaxPrice([FromQuery] decimal price)
+        public IActionResult GetProductsWithMaxPrice([FromQuery] decimal price)
         {
             var products = _productService.GetProductsWithMaxPrice(price);
             if (products == null || !products.Any()) //Any() comprueba si la coleccion tiene algun elemento.

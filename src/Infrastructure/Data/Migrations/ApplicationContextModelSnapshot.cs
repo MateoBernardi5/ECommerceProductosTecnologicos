@@ -36,6 +36,15 @@ namespace Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Televisor",
+                            Price = 540000m,
+                            Stock = 10
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.SaleOrder", b =>
@@ -133,7 +142,7 @@ namespace Web.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 5,
+                            Id = 3,
                             Email = "mateobernardi@gmail.com",
                             LastName = "Bernardi",
                             Name = "Mateo",
@@ -152,6 +161,19 @@ namespace Web.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("Client");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Email = "pazblanco01@gmail.com",
+                            LastName = "Blanco",
+                            Name = "Maria Paz",
+                            Password = "paz123",
+                            UserName = "paz",
+                            UserType = "Client",
+                            Address = "Espora 1389"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.SaleOrder", b =>
