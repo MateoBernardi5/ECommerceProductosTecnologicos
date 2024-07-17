@@ -36,9 +36,32 @@ namespace Infrastructure.Data
                     Email = "mateobernardi@gmail.com",
                     UserName = "mateo",
                     Password = "123",
-                    Id = 5,
+                    Id = 3,
                     UserType = "Admin"
                 });
+
+            modelBuilder.Entity<Client>().HasData(
+                new Client
+                {
+                    LastName = "Blanco",
+                    Name = "Maria Paz",
+                    Email = "pazblanco01@gmail.com",
+                    UserName = "paz",
+                    Password = "paz123",
+                    Address = "Espora 1389",
+                    Id = 2,
+                    UserType = "Client"
+                });
+
+            modelBuilder.Entity<Product>().HasData(
+                new Product
+                {
+                    Id = 1,
+                    Name = "Televisor",
+                    Price = 540000,
+                    Stock = 10
+                });
+
 
             // Relación entre Cliente y OrdenDeVenta (uno a muchos)
             modelBuilder.Entity<Client>()

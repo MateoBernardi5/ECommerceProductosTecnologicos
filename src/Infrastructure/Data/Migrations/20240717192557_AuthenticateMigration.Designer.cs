@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240717025205_AuthMigration")]
-    partial class AuthMigration
+    [Migration("20240717192557_AuthenticateMigration")]
+    partial class AuthenticateMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,15 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Televisor",
+                            Price = 540000m,
+                            Stock = 10
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.SaleOrder", b =>
@@ -136,7 +145,7 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 5,
+                            Id = 3,
                             Email = "mateobernardi@gmail.com",
                             LastName = "Bernardi",
                             Name = "Mateo",
@@ -155,6 +164,19 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("Client");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Email = "pazblanco01@gmail.com",
+                            LastName = "Blanco",
+                            Name = "Maria Paz",
+                            Password = "paz123",
+                            UserName = "paz",
+                            UserType = "Client",
+                            Address = "Espora 1389"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.SaleOrder", b =>
