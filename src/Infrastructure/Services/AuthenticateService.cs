@@ -26,33 +26,15 @@ namespace Infrastructure.Services
             _options = options.Value;
         }
 
-        //private User? ValidateUser(CredentialsDtoRequest credentialsRequest)
-        //{
-        //    if (string.IsNullOrEmpty(credentialsRequest.Email) || string.IsNullOrEmpty(credentialsRequest.Password))
-        //        return null;
-
-        //    var user = _userRepository.Get(credentialsRequest.Email);
-
-        //    if (user == null) return null;
-
-        //    if (credentialsRequest.UserType == typeof(Admin).Name || credentialsRequest.UserType == typeof(Client).Name)
-        //    {
-        //        if (user.UserType == credentialsRequest.UserType && user.Password == credentialsRequest.Password) return user;
-        //    }
-
-        //    return null;
-
-        //}
         private User? ValidateUser(CredentialsDtoRequest credentialsRequest)
         {
             if (string.IsNullOrEmpty(credentialsRequest.Email) || string.IsNullOrEmpty(credentialsRequest.Password))
                 return null;
 
-            var user = _userRepository.Get(credentialsRequest.Email);
+            var user = _userRepository.GetUserByEmail(credentialsRequest.Email);
 
             if (user == null) return null;
 
-            // Verificamos solo email y password
             if (user.Password == credentialsRequest.Password) return user;
 
             return null;

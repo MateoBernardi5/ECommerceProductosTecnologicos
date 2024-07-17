@@ -11,7 +11,7 @@ namespace Web.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -25,6 +25,17 @@ namespace Web.Controllers
         public IActionResult GetAll()
         {
             var products = _productService.GetAllProducts();
+            return Ok(products);
+        }
+
+        [HttpGet("by-price")]
+        public ActionResult<List<Product>> GetProductsWithMaxPrice([FromQuery] decimal price)
+        {
+            var products = _productService.GetProductsWithMaxPrice(price);
+            if (products == null || !products.Any()) //Any() comprueba si la coleccion tiene algun elemento.
+            {
+                return NotFound($"No se encontraron Productos con un precio menor o igual al ingresado.");
+            }
             return Ok(products);
         }
 

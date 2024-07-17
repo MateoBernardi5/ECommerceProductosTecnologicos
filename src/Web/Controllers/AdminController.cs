@@ -9,7 +9,7 @@ namespace Web.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _service;

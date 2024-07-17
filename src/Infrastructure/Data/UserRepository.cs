@@ -16,9 +16,9 @@ namespace Infrastructure.Data
             _context = context;
         }
 
-        public User? Get(string name)
+        public User? GetUserByEmail(string email)
         {
-            return _context.Users.FirstOrDefault(x => x.Name == name);
+            return _context.Users.SingleOrDefault(x => x.Email == email);
         }
     }
 }
