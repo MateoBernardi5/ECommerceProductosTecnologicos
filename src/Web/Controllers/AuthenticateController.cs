@@ -12,32 +12,19 @@ namespace Web.Controllers
     public class AuthenticateController : ControllerBase
     {
         private readonly IConfiguration _config;
-        private readonly ICustomAuthenticationService _authenticationService;
+        private readonly ICustomAuthenticationService _customAuthenticationService;
 
         public AuthenticateController(IConfiguration config, ICustomAuthenticationService authenticateService)
         {
             _config = config;
-            _authenticationService = authenticateService;
+            _customAuthenticationService = authenticateService;
         }
 
-        [HttpPost]
-        public ActionResult<string> Authenticate([FromBody] CredentialsDtoRequest credentials)
+        [HttpPost("authenticate")] //Vamos a usar un POST ya que debemos enviar los datos para hacer el login
+        public ActionResult<string> Authenticate([FromBody] CredentialsDtoRequest credentials) 
         {
-            //string token = _authenticationService.Authenticate(credentials);
-            //return Ok(token);
-            try
-            {
-                var token = _authenticationService.Authenticate(credentials);
-                return Ok(new { Token = token });
-            }
-            catch (NotAllowedException ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while processing your request." });
-            }
+            string token = _customAuthenticationService.Authenticate(credentials); // Llamar a una función que valide los parámetros que enviamos.
+            return Ok(token);
         }
     }
 }

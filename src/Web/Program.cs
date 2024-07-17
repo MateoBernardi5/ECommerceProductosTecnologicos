@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using Application.Services;
 using Domain.Interfaces;
+using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -11,7 +12,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using static Infrastructure.Services.AuthenticateService;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +43,7 @@ builder.Services.AddSwaggerGen(setupAction =>
 });
 
 #region Database
+
 string connectionString = "Data Source=Ecommerce-ProductosTecnologicos.db";
 
 // Configure the SQLite connection
@@ -59,24 +60,10 @@ using (var command = connection.CreateCommand())
 builder.Services.AddDbContext<ApplicationContext>(dbContextOptions => dbContextOptions.UseSqlite(connection));
 #endregion
 
-//builder.Services.AddAuthentication("Bearer") //"Bearer" es el tipo de auntenticación que tenemos que elegir después en PostMan para pasarle el token
-//    .AddJwtBearer(options => //Acá definimos la configuración de la autenticación. le decimos qué cosas queremos comprobar. La fecha de expiración se valida por defecto.
-//    {
-//        options.TokenValidationParameters = new()
-//        {
-//            ValidateIssuer = true,
-//            ValidateAudience = true,
-//            ValidateIssuerSigningKey = true,
-//            ValidIssuer = builder.Configuration["AutenticacionService:Issuer"],
-//            ValidAudience = builder.Configuration["AutenticacionService:Audience"],
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["AuthenticateService:SecretForKey"]))
-//        };
-//    }
-//);
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication("Bearer") //"Bearer" es el tipo de auntenticación que tenemos que elegir después en PostMan para pasarle el token
+    .AddJwtBearer(options => //Acá definimos la configuración de la autenticación. Le decimos qué cosas queremos comprobar. La fecha de expiración se valida por defecto.
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        options.TokenValidationParameters = new ()
         {
             ValidateIssuer = true,
             ValidateAudience = true,
