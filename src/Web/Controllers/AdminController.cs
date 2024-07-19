@@ -14,11 +14,11 @@ namespace Web.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _service;
-        private readonly IUserService _userService;
-        public AdminController(IAdminService service, IUserService userService)
+        
+        public AdminController(IAdminService service)
         {
             _service = service;
-            _userService = userService;
+            
         }
 
         [HttpGet]

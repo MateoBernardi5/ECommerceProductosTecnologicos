@@ -18,11 +18,11 @@ namespace Web.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IClientService _service;
-        private readonly IUserService _userService;
-        public ClientController(IClientService service, IUserService userService)
+        
+        public ClientController(IClientService service)
         {
             _service = service;
-            _userService = userService;
+            
         }
 
         [HttpGet]
@@ -68,7 +68,7 @@ namespace Web.Controllers
             {
                 return NotFound($"No se encontró ningún Cliente con el ID: {id}");
             }
-            _userService.DeleteUser(id);
+            _service.DeleteClient(id);
             return Ok($"Cliente con ID: {id} eliminado");                
         }
 

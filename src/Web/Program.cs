@@ -79,7 +79,7 @@ builder.Services.AddAuthentication("Bearer") //"Bearer" es el tipo de auntentica
 
 #region Services
 
-builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProductService, ProductService>();

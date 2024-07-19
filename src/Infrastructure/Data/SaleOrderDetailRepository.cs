@@ -55,11 +55,6 @@ namespace Infrastructure.Data
                 .ToList();
         }
 
-        //public bool ProductExists(int productId)
-        //{
-        //    return _context.Products.Any(p => p.Id == productId);
-        //}
-
         public bool SaleOrderExists(int saleOrderId)
         {
             return _context.SaleOrders.Any(s => s.Id == saleOrderId);
