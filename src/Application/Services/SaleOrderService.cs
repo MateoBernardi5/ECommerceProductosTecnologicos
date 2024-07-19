@@ -19,14 +19,14 @@ namespace Application.Services
         {
             _repository = repository;
         }
-        public List<SaleOrder> GetAllSaleOrders()
+        public List<SaleOrder> GetAllByClient(int clientId)
         {
-            return _repository.Get();
+            return _repository.GetAllByClient(clientId);
         }
 
-        public SaleOrder? Get(int id)
+        public SaleOrder? GetById(int id)
         {
-            return _repository.Get(id);
+            return _repository.GetById(id);
         }
 
         public int AddSaleOrder(SaleOrderDto dto)

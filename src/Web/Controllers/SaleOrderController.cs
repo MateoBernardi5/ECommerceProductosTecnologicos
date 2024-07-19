@@ -2,6 +2,7 @@
 using Application.Models;
 using Application.Models.Requests;
 using Application.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,17 +21,17 @@ namespace Web.Controllers
             _saleOrderService = saleOrderService;
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
+        [HttpGet("{clientId}")]
+        public IActionResult GetAllByClient([FromRoute] int clientId)
         {
-            var saleOrders = _saleOrderService.GetAllSaleOrders();
+            var saleOrders = _saleOrderService.GetAllByClient(clientId);
             return Ok(saleOrders);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var saleOrder = _saleOrderService.Get(id);
+            var saleOrder = _saleOrderService.GetById(id);
             if (saleOrder == null)
             {
                 return NotFound($"No se encontró ninguna venta con el ID: {id}");
@@ -38,41 +39,30 @@ namespace Web.Controllers
             return Ok(saleOrder);
         }
 
-
         [HttpPost]
         public IActionResult Add([FromBody] SaleOrderDto dto)
         {
-            return Ok(_saleOrderService.AddSaleOrder(dto));
+            var saleOrder = _saleOrderService.AddSaleOrder(dto);
+            return Ok($"Creada la Venta con el ID: {saleOrder}");
         }
-
-        
 
         [HttpDelete("{id}")]
         public IActionResult DeleteSaleOrder([FromRoute] int id)
         {
-            try
+            var existingSaleOrder = _saleOrderService.GetById(id);
+            if (existingSaleOrder == null)
             {
-                var existingSaleOrder = _saleOrderService.Get(id);
-                if (existingSaleOrder == null)
-                {
-                    return NotFound($"No se encontró ninguna venta con el ID: {id}");
-                }
-
-                _saleOrderService.DeleteSaleOrder(id);
-                return Ok($"Venta con ID: {id} eliminada");
+                return NotFound($"No se encontró ninguna venta con el ID: {id}");
             }
-
-            catch (Exception ex)
-            {
-                return BadRequest($"Se produjo un error al intentar eliminar la venta: {ex.Message}");
-            }
+            _saleOrderService.DeleteSaleOrder(id);
+            return Ok($"Venta con ID: {id} eliminada");
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateSaleOrder([FromRoute] int id, [FromBody] SaleOrderDto dto)
         {
             // Verificar si existe el Admin con el ID proporcionado
-            var existingSaleOrder = _saleOrderService.Get(id);
+            var existingSaleOrder = _saleOrderService.GetById(id);
             if (existingSaleOrder == null)
             {
                 return NotFound($"No se encontró ninguna Venta con el ID: {id}");

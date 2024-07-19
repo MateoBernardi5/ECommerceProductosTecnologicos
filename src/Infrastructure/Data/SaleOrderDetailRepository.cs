@@ -16,6 +16,15 @@ namespace Infrastructure.Data
         {
             _context = context;
         }
+
+        public SaleOrderDetail? GetById(int id)
+        {
+            return _context.SaleOrderDetails
+                .Include(sol => sol.Product)
+                .Include(sol => sol.SaleOrder)
+                .ThenInclude(so => so.Client)
+                .SingleOrDefault(x => x.Id == id);
+        }
         public List<SaleOrderDetail> GetAllBySaleOrder(int orderId)
         {
             return _context.SaleOrderDetails
@@ -36,10 +45,20 @@ namespace Infrastructure.Data
                 .ToList();
         }
 
-        public bool ProductExists(int productId)
+        public List<SaleOrderDetail> GetAllByClient(int clientId)
         {
-            return _context.Products.Any(p => p.Id == productId);
+            return _context.SaleOrderDetails
+                .Include(sol => sol.Product)
+                .Include(sol => sol.SaleOrder)
+                .ThenInclude(so => so.Client)
+                .Where(sol => sol.SaleOrder.ClientId == clientId)
+                .ToList();
         }
+
+        //public bool ProductExists(int productId)
+        //{
+        //    return _context.Products.Any(p => p.Id == productId);
+        //}
 
         public bool SaleOrderExists(int saleOrderId)
         {
@@ -49,39 +68,5 @@ namespace Infrastructure.Data
         {
             return _context.Products.Find(productId);
         }
-
-        //public SaleOrderDetail? GetOne(int Id)
-        //{
-        //    return _context.SaleOrdersDetails
-        //        .Include(sol => sol.Product)
-        //        .Include(sol => sol.SaleOrder)
-        //        .ThenInclude(so => so.Client)
-        //        .SingleOrDefault(x => x.Id == Id);
-        //}
-
-        //public SaleOrderDetail CreateSaleOrderLine(SaleOrderDetail lineOfOrder)
-        //{
-        //    _context.Add(lineOfOrder);
-        //    _context.SaveChanges();
-        //    return lineOfOrder;
-        //}
-
-        //public SaleOrderDetail UpdateSaleOrderLine(SaleOrderDetail lineOfOrder)
-        //{
-        //    _context.Update(lineOfOrder);
-        //    _context.SaveChanges();
-        //    return lineOfOrder;
-        //}
-
-        //public void DeleteSaleOrderLine(int id)
-        //{
-        //    var solToDelete = _context.SaleOrdersDetails.SingleOrDefault(p => p.Id == id);
-
-        //    if (solToDelete != null)
-        //    {
-        //        _context.SaleOrdersDetails.Remove(solToDelete);
-        //        _context.SaveChanges();
-        //    }
-        //}
     }
 }

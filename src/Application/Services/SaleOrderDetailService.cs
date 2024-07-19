@@ -2,6 +2,7 @@
 using Application.Models;
 using Application.Models.Requests;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,14 +15,16 @@ namespace Application.Services
     public class SaleOrderDetailService : ISaleOrderDetailService
     {
         private readonly ISaleOrderDetailRepository _repository;
-        public SaleOrderDetailService(ISaleOrderDetailRepository repository)
+        private readonly IProductService _productService;
+        public SaleOrderDetailService(ISaleOrderDetailRepository repository, IProductService productService)
         {
             _repository = repository;
+            _productService = productService;
         }
 
-        public List<SaleOrderDetail> GetAllSaleOrderDetails()
+        public List<SaleOrderDetail> GetAllByClient(int clientId)
         {
-            return _repository.Get();
+            return _repository.GetAllByClient(clientId);
         }
 
         public List<SaleOrderDetail> GetAllByProduct(int productId)
@@ -31,34 +34,44 @@ namespace Application.Services
 
         public List<SaleOrderDetail> GetAllBySaleOrder(int orderId)
         {
-            //return _repository.Get(orderId);
             return _repository.GetAllBySaleOrder(orderId); ; // Método actualizado
         }
 
-        public SaleOrderDetail? Get(int id)
+        public SaleOrderDetail? GetById(int id)
         {
-            return _repository.Get(id);
+            return _repository.GetById(id);
         }
 
         public int AddSaleOrderDetail(SaleOrderDetailDto dto)
         {
             // Verifica que el ProductId exista en la tabla de productos
-            if (!_repository.ProductExists(dto.ProductId))
-            {
-                throw new Exception("ProductId no existe.");
-            }
-
-            // Verifica que el SaleOrderId exista en la tabla de órdenes de venta
-            if (!_repository.SaleOrderExists(dto.SaleOrderId))
-            {
-                throw new Exception("SaleOrderId no existe.");
-            }
+            //if (!_repository.ProductExists(dto.ProductId))
+            //{
+            //    throw new NotAllowedException("ProductId no existe.");
+            //}
 
             // Obtén el producto para asegurarte de que no sea nulo
             var product = _repository.GetProduct(dto.ProductId);
             if (product == null)
             {
-                throw new Exception("El producto no se pudo encontrar.");
+                throw new NotAllowedException("El producto no se pudo encontrar.");
+            }
+
+            // Verifica que el SaleOrderId exista en la tabla de órdenes de venta
+            if (!_repository.SaleOrderExists(dto.SaleOrderId))
+            {
+                throw new NotAllowedException("SaleOrderId no existe.");
+            }
+
+            // Verifica el stock del producto
+            if (product.Stock <= 0)
+            {
+                throw new NotAllowedException("El producto no está disponible en stock.");
+            }
+
+            if (product.Stock < dto.Amount)
+            {
+                throw new NotAllowedException("No hay suficiente stock para el producto.");
             }
 
             var saleOrderLine = new SaleOrderDetail()
@@ -69,6 +82,19 @@ namespace Application.Services
                 UnitPrice = product.Price, // Asigna el precio unitario del producto
                 Product = product // Asigna el producto para evitar referencias nulas
             };
+
+            // Actualiza el stock del producto
+            var updatedProductRequest = new ProductUpdateRequest
+            {
+                Price = product.Price,
+                Stock = product.Stock - dto.Amount
+            };
+            _productService.UpdateProduct(dto.ProductId, updatedProductRequest);
+
+            // Verificar y actualizar el estado del stock
+            product.Stock = updatedProductRequest.Stock;
+            var stockStatus = product.StockStatus;
+
             return _repository.Add(saleOrderLine).Id;
         }
 
