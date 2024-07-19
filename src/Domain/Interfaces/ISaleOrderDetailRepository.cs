@@ -13,8 +13,7 @@ namespace Domain.Interfaces
         List<SaleOrderDetail> GetAllBySaleOrder(int orderId);
         List<SaleOrderDetail> GetAllByProduct(int productId);
         List<SaleOrderDetail> GetAllByClient(int clientId);
-        //bool ProductExists(int productId);
         bool SaleOrderExists(int saleOrderId);
-        Product? GetProduct(int productId);
+        Product? GetProduct(int productId);       
     }
 }

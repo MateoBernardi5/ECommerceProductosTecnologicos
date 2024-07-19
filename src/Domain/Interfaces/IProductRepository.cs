@@ -10,6 +10,6 @@ namespace Domain.Interfaces
     public interface IProductRepository : IBaseRepository<Product>
     {
         Product? Get(string name);
-        List<Product> GetProductsWithMaxPrice(decimal price);
+        List<Product> GetProductsWithMaxPrice(decimal price);      
     }
 }

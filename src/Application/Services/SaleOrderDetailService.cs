@@ -44,12 +44,6 @@ namespace Application.Services
 
         public int AddSaleOrderDetail(SaleOrderDetailDto dto)
         {
-            // Verifica que el ProductId exista en la tabla de productos
-            //if (!_repository.ProductExists(dto.ProductId))
-            //{
-            //    throw new NotAllowedException("ProductId no existe.");
-            //}
-
             // Obtén el producto para asegurarte de que no sea nulo
             var product = _repository.GetProduct(dto.ProductId);
             if (product == null)
