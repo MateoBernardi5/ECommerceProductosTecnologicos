@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models.Requests;
 using Application.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,8 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] AdminCreateRequest body)
         {
-            return Ok(_service.AddAdmin(body));
+            var newAdmin = _service.AddAdmin(body);
+            return Ok($"Creado el Admin con el ID: {newAdmin}");
         }
 
         [HttpDelete("{id}")]
@@ -69,14 +71,11 @@ namespace Web.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateAdmin([FromRoute] int id, [FromBody] AdminUpdateRequest request)
         {
-            // Verificar si existe el Admin con el ID proporcionado
             var existingAdmin = _service.Get(id);
             if (existingAdmin == null)
             {
                 return NotFound($"No se encontró ningún Admin con el ID: {id}");
             }
-
-            // Actualizar el Admin
             _service.UpdateAdmin(id, request);
             return Ok($"Admin con ID: {id} actualizado correctamente");
         }

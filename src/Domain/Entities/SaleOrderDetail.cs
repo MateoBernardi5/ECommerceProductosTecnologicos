@@ -21,14 +21,6 @@ namespace Domain.Entities
         [ForeignKey("SaleOrderId")]
         public int SaleOrderId { get; set; } // Clave foránea para la relación con OrdenDeVenta
         public SaleOrder SaleOrder { get; set; }
-        //public decimal Total { get { return Product.Price * Amount; } }
-        //public decimal Total { get { return Product != null ? Product.Price * Amount : 0; } }
-        public decimal Total
-        {
-            get
-            {
-                return Product != null ? Product.Price * Amount : 0;
-            }
-        }
+        public decimal Total { get { return Product.Price * Amount; } }
     }
 }

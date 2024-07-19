@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json.Converters;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
@@ -16,5 +19,6 @@ namespace Domain.Entities
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; }
+        public StockStatus StockStatus => Stock > 0 ? StockStatus.Disponible : StockStatus.Agotado;
     }
 }

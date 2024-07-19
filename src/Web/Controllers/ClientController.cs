@@ -56,7 +56,8 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] ClientCreateRequest body)
         {
-            return Ok(_service.AddClient(body));
+            var newClient = _service.AddClient(body);
+            return Ok($"Creado el Cliente con el ID: {newClient}");
         }
 
         [HttpDelete("{id}")]
@@ -74,14 +75,11 @@ namespace Web.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateClient([FromRoute] int id, [FromBody] ClientUpdateRequest request)
         {
-            // Verificar si existe el Admin con el ID proporcionado
             var existingClient = _service.Get(id);
             if (existingClient == null)
             {
                 return NotFound($"No se encontró ningún Cliente con el ID: {id}");
             }
-
-            // Actualizar el Admin
             _service.UpdateClient(id, request);
             return Ok($"Cliente con ID: {id} actualizado correctamente");
         }

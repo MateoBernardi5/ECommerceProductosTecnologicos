@@ -13,11 +13,14 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using static Infrastructure.Services.AuthenticateService;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//Sirve para que los controladores ASP.NET Core utilicen Newtonsoft.Json para manejar los bucles de referencia para la serialización JSON.
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setupAction =>
@@ -78,7 +81,7 @@ builder.Services.AddAuthentication("Bearer") //"Bearer" es el tipo de auntentica
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClientService, ClientService>();
-builder.Services.AddScoped< IAdminService, AdminService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISaleOrderService, SaleOrderService>();
 builder.Services.AddScoped<ISaleOrderDetailService, SaleOrderDetailService>();

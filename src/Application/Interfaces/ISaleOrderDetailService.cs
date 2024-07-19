@@ -11,10 +11,10 @@ namespace Application.Interfaces
 {
     public interface ISaleOrderDetailService
     {
-        List<SaleOrderDetail> GetAllSaleOrderDetails();
+        List<SaleOrderDetail> GetAllByClient(int clientId);
         List<SaleOrderDetail> GetAllByProduct(int productId);
         List<SaleOrderDetail> GetAllBySaleOrder(int orderId);
-        SaleOrderDetail? Get(int id);
+        SaleOrderDetail? GetById(int id);
         int AddSaleOrderDetail(SaleOrderDetailDto dto);
         void DeleteSaleOrderDetail(int id);
         void UpdateSaleOrderDetail(int id, SaleOrderDetailUpdateRequest request);

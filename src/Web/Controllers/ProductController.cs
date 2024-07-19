@@ -50,7 +50,6 @@ namespace Web.Controllers
             return Ok(product);
         }
 
-
         [HttpGet("{name}")]
         public IActionResult GetByName([FromRoute] string name)
         {
@@ -65,41 +64,30 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] ProductCreateRequest body)
         {
-            return Ok(_productService.AddProduct(body));
+            var newProduct = _productService.AddProduct(body);
+            return Ok($"Creado el Producto con el ID {newProduct}");
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct([FromRoute] int id)
         {
-            try
-            {
-                var existingProduct = _productService.Get(id);
-                if (existingProduct == null)
-                {
-                    return NotFound($"No se encontró ningún Producto con el ID: {id}");
-                }
-
-                _productService.DeleteProduct(id);
-                return Ok($"Producto con ID: {id} eliminado");
-            }
-           
-            catch (Exception ex)
-            {
-                return BadRequest($"Se produjo un error al intentar eliminar el producto: {ex.Message}");
-            }
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult UpdateProduct([FromRoute] int id, [FromBody] ProductUpdateRequest request)
-        {
-            // Verificar si existe el Admin con el ID proporcionado
             var existingProduct = _productService.Get(id);
             if (existingProduct == null)
             {
                 return NotFound($"No se encontró ningún Producto con el ID: {id}");
             }
-
-            // Actualizar el Admin
+            _productService.DeleteProduct(id);
+            return Ok($"Producto con ID: {id} eliminado");
+        }
+   
+        [HttpPut("{id}")]
+        public IActionResult UpdateProduct([FromRoute] int id, [FromBody] ProductUpdateRequest request)
+        {
+            var existingProduct = _productService.Get(id);
+            if (existingProduct == null)
+            {
+                return NotFound($"No se encontró ningún Producto con el ID: {id}");
+            }
             _productService.UpdateProduct(id, request);
             return Ok($"Producto con ID: {id} actualizado correctamente");
         }
