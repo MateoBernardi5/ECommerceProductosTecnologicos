@@ -59,8 +59,8 @@ namespace Infrastructure.Services
             //Los claims son datos en clave->valor que nos permite guardar data del usuario.
             var claimsForToken = new List<Claim>();
             claimsForToken.Add(new Claim("sub", user.Id.ToString())); //"sub" es una key estándar que significa unique user identifier, es decir, si mandamos el id del usuario por convención lo hacemos con la key "sub".
-            claimsForToken.Add(new Claim("given_name", user.Name)); //Lo mismo para given_name y family_name, son las convenciones para nombre y apellido. Ustedes pueden usar lo que quieran, pero si alguien que no conoce la app
-            claimsForToken.Add(new Claim("family_name", user.LastName)); //quiere usar la API por lo general lo que espera es que se estén usando estas keys.
+            claimsForToken.Add(new Claim("email", user.Email)); //Lo mismo para email y username, son las convenciones para email y nombre de usuario. Ustedes pueden usar lo que quieran, pero si alguien que no conoce la app
+            claimsForToken.Add(new Claim("username", user.UserName)); //quiere usar la API por lo general lo que espera es que se estén usando estas keys.
             claimsForToken.Add(new Claim("role", user.UserType)); //Debería venir del usuario
             //claimsForToken.Add(new Claim("role", credentialsRequest.UserType)); //Debería venir del usuario
 

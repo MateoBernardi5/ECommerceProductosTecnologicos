@@ -6,6 +6,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Web.Controllers
 {
@@ -24,53 +25,78 @@ namespace Web.Controllers
         [HttpGet("{clientId}")]
         public IActionResult GetAllByClient([FromRoute] int clientId)
         {
-            var saleOrders = _saleOrderService.GetAllByClient(clientId);
-            return Ok(saleOrders);
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin" || roleClaim.Value == "Client")
+            {
+                var saleOrders = _saleOrderService.GetAllByClient(clientId);
+                return Ok(saleOrders);
+            }
+            return Forbid();
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var saleOrder = _saleOrderService.GetById(id);
-            if (saleOrder == null)
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin")
             {
-                return NotFound($"No se encontró ninguna venta con el ID: {id}");
+                var saleOrder = _saleOrderService.GetById(id);
+                if (saleOrder == null)
+                {
+                    return NotFound($"No se encontró ninguna venta con el ID: {id}");
+                }
+                return Ok(saleOrder);
             }
-            return Ok(saleOrder);
+            return Forbid();
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] SaleOrderDto dto)
         {
-            var saleOrder = _saleOrderService.AddSaleOrder(dto);
-            return Ok($"Creada la Venta con el ID: {saleOrder}");
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin" || roleClaim.Value == "Client")
+            {
+                var saleOrder = _saleOrderService.AddSaleOrder(dto);
+                return Ok($"Creada la Venta con el ID: {saleOrder}");
+            }
+            return Forbid();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteSaleOrder([FromRoute] int id)
         {
-            var existingSaleOrder = _saleOrderService.GetById(id);
-            if (existingSaleOrder == null)
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin" || roleClaim.Value == "Client")
             {
-                return NotFound($"No se encontró ninguna venta con el ID: {id}");
+                var existingSaleOrder = _saleOrderService.GetById(id);
+                if (existingSaleOrder == null)
+                {
+                    return NotFound($"No se encontró ninguna venta con el ID: {id}");
+                }
+                _saleOrderService.DeleteSaleOrder(id);
+                return Ok($"Venta con ID: {id} eliminada");
             }
-            _saleOrderService.DeleteSaleOrder(id);
-            return Ok($"Venta con ID: {id} eliminada");
+            return Forbid();
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateSaleOrder([FromRoute] int id, [FromBody] SaleOrderDto dto)
         {
-            // Verificar si existe el Admin con el ID proporcionado
-            var existingSaleOrder = _saleOrderService.GetById(id);
-            if (existingSaleOrder == null)
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin")
             {
-                return NotFound($"No se encontró ninguna Venta con el ID: {id}");
-            }
+                // Verificar si existe el Admin con el ID proporcionado
+                var existingSaleOrder = _saleOrderService.GetById(id);
+                if (existingSaleOrder == null)
+                {
+                    return NotFound($"No se encontró ninguna Venta con el ID: {id}");
+                }
 
-            // Actualizar el Admin
-            _saleOrderService.UpdateSaleOrder(id, dto);
-            return Ok($"Venta con ID: {id} actualizado correctamente");
+                // Actualizar el Admin
+                _saleOrderService.UpdateSaleOrder(id, dto);
+                return Ok($"Venta con ID: {id} actualizado correctamente");
+            }
+            return Forbid();
         }
     }
 }
