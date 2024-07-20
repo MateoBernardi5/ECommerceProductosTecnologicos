@@ -5,6 +5,7 @@ using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Web.Controllers
 {
@@ -23,68 +24,98 @@ namespace Web.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var saleOrderDetail = _saleOrderDetailService.GetById(id);
-            if (saleOrderDetail == null)
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin")
             {
-                return NotFound($"No se encontró ningun detalle de venta con el ID: {id}");
+                var saleOrderDetail = _saleOrderDetailService.GetById(id);
+                if (saleOrderDetail == null)
+                {
+                    return NotFound($"No se encontró ningun detalle de venta con el ID: {id}");
+                }
+                return Ok(saleOrderDetail);
             }
-            return Ok(saleOrderDetail);
+            return Forbid();
         }
  
         [HttpGet("{productId}")]
         public IActionResult GetAllByProduct([FromRoute] int productId)
         {
-            var saleOrderDetail = _saleOrderDetailService.GetAllByProduct(productId);
-            if (saleOrderDetail == null)
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin")
             {
-                return NotFound($"No se encontró ningun detalle de venta con el ID: {productId}");
+                var saleOrderDetail = _saleOrderDetailService.GetAllByProduct(productId);
+                if (saleOrderDetail == null)
+                {
+                    return NotFound($"No se encontró ningun detalle de venta con el ID: {productId}");
+                }
+                return Ok(saleOrderDetail);
             }
-            return Ok(saleOrderDetail);
+            return Forbid();
         }
 
         [HttpGet("{orderId}")]
         public IActionResult GetAllBySaleOrder([FromRoute] int orderId)
         {
-            var saleOrderDetail = _saleOrderDetailService.GetAllBySaleOrder(orderId);
-            if (saleOrderDetail == null)
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin")
             {
-                return NotFound($"No se encontró ningun detalle de venta con el ID: {orderId}");
+                var saleOrderDetail = _saleOrderDetailService.GetAllBySaleOrder(orderId);
+                if (saleOrderDetail == null)
+                {
+                    return NotFound($"No se encontró ningun detalle de venta con el ID: {orderId}");
+                }
+                return Ok(saleOrderDetail);
             }
-            return Ok(saleOrderDetail);
+            return Forbid();
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] SaleOrderDetailDto dto)
         {
-            var saleOrderDetail = _saleOrderDetailService.AddSaleOrderDetail(dto);
-            return Ok($"Creado el Detalle de Venta con el ID: {saleOrderDetail}");
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin" || roleClaim.Value == "Client")
+            {
+                var saleOrderDetail = _saleOrderDetailService.AddSaleOrderDetail(dto);
+                return Ok($"Creado el Detalle de Venta con el ID: {saleOrderDetail}");
+            }
+            return Forbid();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteSaleOrderDetail([FromRoute] int id)
         {
-            var existingSaleOrderDetail = _saleOrderDetailService.GetById(id);
-            if (existingSaleOrderDetail == null)
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin" || roleClaim.Value == "Client")
             {
-                return NotFound($"No se encontró ningun detalle de venta con el ID: {id}");
+                var existingSaleOrderDetail = _saleOrderDetailService.GetById(id);
+                if (existingSaleOrderDetail == null)
+                {
+                    return NotFound($"No se encontró ningun detalle de venta con el ID: {id}");
+                }
+                _saleOrderDetailService.DeleteSaleOrderDetail(id);
+                return Ok($"Detalle de venta con ID: {id} eliminada");
             }
-            _saleOrderDetailService.DeleteSaleOrderDetail(id);
-            return Ok($"Detalle de venta con ID: {id} eliminada");
+            return Forbid();
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateSaleOrderDetail([FromRoute] int id, [FromBody] SaleOrderDetailUpdateRequest request)
         {
-            // Verificar si existe el Admin con el ID proporcionado
-            var existingSaleOrderDetail = _saleOrderDetailService.GetById(id);
-            if (existingSaleOrderDetail == null)
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (roleClaim.Value == "Admin" || roleClaim.Value == "Client")
             {
-                return NotFound($"No se encontró ningun Detalle de Venta con el ID: {id}");
-            }
+                // Verificar si existe el Admin con el ID proporcionado
+                var existingSaleOrderDetail = _saleOrderDetailService.GetById(id);
+                if (existingSaleOrderDetail == null)
+                {
+                    return NotFound($"No se encontró ningun Detalle de Venta con el ID: {id}");
+                }
 
-            // Actualizar el Admin
-            _saleOrderDetailService.UpdateSaleOrderDetail(id, request);
-            return Ok($"Detalle de Venta con ID: {id} actualizado correctamente");
+                // Actualizar el Admin
+                _saleOrderDetailService.UpdateSaleOrderDetail(id, request);
+                return Ok($"Detalle de Venta con ID: {id} actualizado correctamente");
+            }
+            return Forbid();
         }
     }
 }
