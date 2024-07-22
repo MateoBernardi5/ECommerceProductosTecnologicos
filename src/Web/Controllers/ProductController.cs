@@ -5,6 +5,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Security.Claims;
 
 namespace Web.Controllers
@@ -21,11 +22,16 @@ namespace Web.Controllers
             _productService = productService;
         }
 
+        private bool IsUserInRole(string role)
+        {
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role); // Obtener el claim de rol, si existe
+            return roleClaim != null && roleClaim.Value == role; //Verificar si el claim existe y su valor es "role"
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin" || roleClaim.Value == "Client")
+            if (IsUserInRole("Admin") || (IsUserInRole("Client")))
             {
                 var products = _productService.GetAllProducts();
                 return Ok(products);
@@ -36,8 +42,7 @@ namespace Web.Controllers
         [HttpGet("by-price")]
         public IActionResult GetProductsWithMaxPrice([FromQuery] decimal price)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin" || roleClaim.Value == "Client")
+            if (IsUserInRole("Admin") || (IsUserInRole("Client")))
             {
                 var products = _productService.GetProductsWithMaxPrice(price);
                 if (products == null || !products.Any()) //Any() comprueba si la coleccion tiene algun elemento.
@@ -52,8 +57,7 @@ namespace Web.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 var product = _productService.Get(id);
                 if (product == null)
@@ -68,8 +72,7 @@ namespace Web.Controllers
         [HttpGet("{name}")]
         public IActionResult GetByName([FromRoute] string name)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin" || roleClaim.Value == "Client")
+            if (IsUserInRole("Admin") || (IsUserInRole("Client")))
             {
                 var product = _productService.Get(name);
                 if (product == null)
@@ -84,11 +87,10 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] ProductCreateRequest body)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 var newProduct = _productService.AddProduct(body);
-                return Ok($"Creado el Producto con el ID {newProduct}");
+                return CreatedAtAction(nameof(GetById), new { id = newProduct }, $"Creado el Producto con el ID: {newProduct}");
             }
             return Forbid();
         }
@@ -96,8 +98,7 @@ namespace Web.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct([FromRoute] int id)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 var existingProduct = _productService.Get(id);
                 if (existingProduct == null)
@@ -113,8 +114,7 @@ namespace Web.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateProduct([FromRoute] int id, [FromBody] ProductUpdateRequest request)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 var existingProduct = _productService.Get(id);
                 if (existingProduct == null)
