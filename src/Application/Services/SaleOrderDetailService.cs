@@ -44,6 +44,11 @@ namespace Application.Services
 
         public int AddSaleOrderDetail(SaleOrderDetailDto dto)
         {
+            // Validar que Amount sea mayor que cero
+            if (dto.Amount <= 0)
+            {
+                throw new NotAllowedException("La cantidad debe ser mayor que cero.");
+            }
             // Obtén el producto para asegurarte de que no sea nulo
             var product = _repository.GetProduct(dto.ProductId);
             if (product == null)
@@ -105,14 +110,48 @@ namespace Application.Services
         public void UpdateSaleOrderDetail(int id, SaleOrderDetailUpdateRequest request)
         {
             var saleOrderDetailToUpdate = _repository.Get(id);
-            if (saleOrderDetailToUpdate != null)
+            if (saleOrderDetailToUpdate == null)
             {
-               saleOrderDetailToUpdate.Amount = request.Amount;
-               saleOrderDetailToUpdate.ProductId = request.ProductId;
-
-
-                _repository.Update(saleOrderDetailToUpdate);
+                throw new NotAllowedException($"No se encontró ningun Detalle de Venta con el ID: {id}");
             }
+
+            var product = _productService.Get(request.ProductId);
+            if (product == null)
+            {
+                throw new NotAllowedException($"No se encontró ningun Producto con el ID: {request.ProductId}");
+            }
+
+            // Validar que Amount sea mayor que cero
+            if (request.Amount <= 0)
+            {
+                throw new NotAllowedException("La cantidad debe ser mayor que cero.");
+            }
+
+            // Calcular la diferencia de cantidad
+            int amountDifference = request.Amount - saleOrderDetailToUpdate.Amount;
+
+            // Verificar que haya suficiente stock
+            if (product.Stock < amountDifference)
+            {
+                throw new NotAllowedException("No hay suficiente stock para el producto.");
+            }
+
+            // Actualizar el stock del producto
+            var updatedProductRequest = new ProductUpdateRequest
+            {
+                Price = product.Price,
+                Stock = product.Stock - amountDifference
+            };
+            _productService.UpdateProduct(request.ProductId, updatedProductRequest);
+
+            // Actualizar el detalle de la orden de venta
+            saleOrderDetailToUpdate.Amount = request.Amount;
+            saleOrderDetailToUpdate.ProductId = request.ProductId;
+
+            _repository.Update(saleOrderDetailToUpdate);
         }
+
     }
 }
+    
+

@@ -5,6 +5,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Security.Claims;
 
 namespace Web.Controllers
@@ -22,11 +23,16 @@ namespace Web.Controllers
             
         }
 
+        private bool IsUserInRole(string role)
+        {
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role); // Obtener el claim de rol, si existe
+            return roleClaim != null && roleClaim.Value == role; //Verificar si el claim existe y su valor es "role"
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 return Ok(_service.GetAllAdmins());
             }
@@ -36,8 +42,7 @@ namespace Web.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 var admin = _service.Get(id);
                 if (admin == null)
@@ -52,8 +57,7 @@ namespace Web.Controllers
         [HttpGet("{name}")]
         public IActionResult GetByName([FromRoute] string name)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 var admin = _service.Get(name);
                 if (admin == null)
@@ -68,11 +72,10 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] AdminCreateRequest body)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 var newAdmin = _service.AddAdmin(body);
-                return Ok($"Creado el Admin con el ID: {newAdmin}");
+                return CreatedAtAction(nameof(GetById), new { id = newAdmin }, $"Creado el Admin con el ID: {newAdmin}");
             }
             return Forbid();
         }
@@ -80,8 +83,7 @@ namespace Web.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteAdmin(int id)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 var existingAdmin = _service.Get(id);
                 if (existingAdmin == null)
@@ -97,8 +99,7 @@ namespace Web.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateAdmin([FromRoute] int id, [FromBody] AdminUpdateRequest request)
         {
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim.Value == "Admin")
+            if (IsUserInRole("Admin"))
             {
                 var existingAdmin = _service.Get(id);
                 if (existingAdmin == null)

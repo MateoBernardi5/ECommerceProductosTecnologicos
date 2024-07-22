@@ -21,10 +21,17 @@ namespace Web.Controllers
         }
 
         [HttpPost("authenticate")] //Vamos a usar un POST ya que debemos enviar los datos para hacer el login
-        public ActionResult<string> Authenticate([FromBody] CredentialsDtoRequest credentials) 
+        public ActionResult<string> Authenticate([FromBody] CredentialsDtoRequest credentials)
         {
-            string token = _customAuthenticationService.Authenticate(credentials); // Llamar a una función que valide los parámetros que enviamos.
-            return Ok(token);
+            try
+            {
+                string token = _customAuthenticationService.Authenticate(credentials); // Llamar a una función que valide los parámetros que enviamos.
+                return Ok(token);
+            }
+            catch (NotAllowedException)
+            {
+                return Unauthorized(new { message = "Credenciales inválidas. Por favor, verifica tu email y contraseña." });
+            }
         }
     }
 }
